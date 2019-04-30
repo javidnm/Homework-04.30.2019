@@ -1,0 +1,90 @@
+﻿@model IEnumerable<Vizew.WebUI.Models.Entity.Contact>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section script{
+    <script src="https://cdn.ckeditor.com/4.11.4/standard/ckeditor.js"></script>
+    <script>
+        $(function () {
+            $('.validation-summary-errors').each(function () {
+                $(this).addClass('alert');
+                $(this).addClass('alert-danger');
+            });
+            $('form').each(function () {
+                $(this).find('div.form-group').each(function () {
+                    if ($(this).find('span.field-validation-error').length > 0) {
+                        $(this).addClass('has-error');
+                        $(this).find('span.field-validation-error').
+                            removeClass('field-validation-error');
+                    }
+                });
+            });
+        });
+
+        var readURL = function (input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#news-image').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        var removePhoto = function () {
+            document.getElementById('fileName').value = '';
+            document.getElementById('mediaUrl').value = '';
+            document.getElementById('news-image').src = '';
+        }
+        CKEDITOR.replace('Body');
+    </script>
+}
+
+<h2>Mesajlar</h2>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Message)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsReady)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        var style = (item.IsReady == false) ? "font-weight:bold" : "";
+
+        <tr style="@style">
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Message)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsReady)
+            </td>
+            <td>
+                <a href="@Url.Action("Edit", new { id = item.Id })" class="btn btn-success btn-sm"><i class="fa fa-edit text-light"></i></a>
+                <a href="@Url.Action("Details", new { id = item.Id })" class="btn btn-info btn-sm"><i class="fa fa-search text-light"></i></a>
+                <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-danger btn-sm"><i class="fa fa-trash text-light"></i></a>
+            </td>
+        </tr>
+    }
+
+</table>
